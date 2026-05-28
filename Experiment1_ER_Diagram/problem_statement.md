@@ -106,31 +106,43 @@ A popular restaurant wants to manage reservations, orders, and billing.
 - Waiters assigned to serve reservations.
 
 ### ER Diagram:
-*Paste or attach your diagram here*  
-![ER Diagram](er_diagram_restaurant.png)
+
+<img width="838" height="862" alt="Screenshot 2026-04-30 161334" src="https://github.com/user-attachments/assets/148f5b5f-9e45-45d9-91d2-24fc292d5699" />
 
 ### Entities and Attributes
 
-| Entity | Attributes (PK, FK) | Notes |
-|--------|--------------------|-------|
-|        |                    |       |
-|        |                    |       |
-|        |                    |       |
-|        |                    |       |
-|        |                    |       |
+| Entity      | Attributes (PK, FK)                                                                                | Notes                                         |
+| ----------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------|
+| CUSTOMER    | customer_id (PK), name, phone, email                                                               | Stores customer details                      |
+| RESERVATION | reservation_id (PK), date, time, number_of_guests, customer_id (FK), waiter_id (FK), table_id (FK) | Stores reservation information               |
+| TABLE       | table_id (PK), capacity, status                                                                    | Stores restaurant table details              |
+| WAITER      | waiter_id (PK), name, contact                                                                      | Stores waiter information                    |
+| ORDER       | order_id (PK), order_time, reservation_id (FK)                                                     | Stores order details for reservations        |
+| ORDER_ITEM  | order_id (PK, FK), dish_id (PK, FK), quantity                                                      | Represents dishes included in an order       |
+| DISH        | dish_id (PK), dish_name, price, category_id (FK)                                                   | Stores menu item details                     |
+| CATEGORY    | category_id (PK), category_name                                                                    | Stores dish categories                       |
+| BILL        | bill_id (PK), total_amount, service_charge, reservation_id (FK)                                    | Stores billing details                       |
 
 ### Relationships and Constraints
 
-| Relationship | Cardinality | Participation | Notes |
-|--------------|------------|---------------|-------|
-|              |            |               |       |
-|              |            |               |       |
-|              |            |               |       |
+| Relationship                   | Cardinality | Participation                      | Notes                                                                       |
+| ------------------------------ | ----------- | ---------------------------------- | --------------------------------------------------------------------------- |
+|RESERVATION assigned to TABLE   | M : 1       | Total participation of RESERVATION | Many reservations can be assigned to one table at different times           |
+| RESERVATION assigned to WAITER | M : 1       | Partial participation of WAITER    | A waiter can handle many reservations                                       |
+| RESERVATION has ORDER          | 1 : M       | Total participation of ORDER       | One reservation can have multiple orders                                    |
+| ORDER contains ORDER_ITEM      | 1 : M       | Total participation of ORDER_ITEM  | One order contains many order items                                         |
+| DISH included in ORDER_ITEM    | 1 : M       | Total participation of ORDER_ITEM  | One dish can appear in many order items                                     |
+| DISH belongs to CATEGORY       | M : 1       | Total participation of DISH        | Many dishes belong to one category                                          |
+| RESERVATION generates BILL     | 1 : 1       | Total participation of BILL        | Each reservation generates exactly one bill   
 
 ### Assumptions
-- 
-- 
-- 
+- A customer can make multiple reservations, but each reservation is made by only one customer.
+- A reservation is assigned to one table and one waiter at a time.
+- An order may contain multiple dishes through ORDER_ITEM.
+- Each dish belongs to only one category.
+- Every reservation generates exactly one bill.
+-Table availability is managed using the status attribute.
+- ORDER_ITEM is a weak/associative entity used to resolve the many-to-many relationship between ORDER and DISH
 
 ---
 
